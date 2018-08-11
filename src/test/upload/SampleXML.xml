@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<products>
+    <product>
+        <part_id>978-DST</part_id>
+        <name>Delta Leland One-Handle Kitchen Faucet with Pulldown Spray</name>
+        <description>Leland 2-hole, one-handle kitchen faucet with pulldown spray. Leland(R), traditional styling and modern functionality come together in dramatic fashion for a timeless look. The Delta(R)-exclusive MagnaTite(TM) docking system keeps the spray wand securely in place for picture-perfect grace.</description>
+        <short_description>Leland 2-hole, one-handle kitchen faucet with pulldown spray.</short_description>
+        <finish>Chrome</finish>
+        <vendor>Delta</vendor>
+        <series>Leland</series>
+        <product_type>Faucet - Kitchen</product_type>
+        <links>  
+            <link type="Product Site">http://www.deltafaucet.com/goto/product/978-DST</link>
+        </links>
+        <features>
+            <feature order="1">Handle: SINGLE HANDLE LEVER</feature>
+            <feature order="2">Country of Origin: US</feature>
+            <feature order="3">A charming teapot-inspired series of faucets for the entire home.</feature>
+            <feature order="4">Timeless design is a perfect marriage of both form and function.</feature>
+            <feature order="5">High-arc spout swivels 360 degrees for complete sink access</feature>
+            <feature order="6">The pull-down spray wand features a 59'' hose providing a 20'' reach</feature>
+            <feature order="7">13 7/8'' high-arc spout provides extra clearance for deep pots and pans</feature>
+            <feature order="8">Spout length: 9-3/16</feature>
+            <feature order="9">Spout total height: 14-1/4</feature>
+            <feature order="10">Spout Height Deck to Aerator: 7-1/8</feature>
+            <feature order="11">Holes for installation: 2-hole 4" installation</feature>
+            <feature order="12">Lead Free compliant: Y</feature>
+            <feature order="13">Valve type: DIAMOND(TM) Seal Valve</feature>
+        </features>
+        <tags>
+			<tag>faucet</tag>
+			<tag>kitchen</tag>
+			<tag>one-handle</tag>
+        </tags>
+        <images>
+            <image>http://dfc.scene7.com/is/image/DFC/978-DST-B1?id=WAnqP0&amp;scl=4&amp;req=tile&amp;rect=256,512,119,28&amp;fmt=jpg</image>
+        </images>
+        <warranty>3 year</warranty>
+        <upc>234235326363</upc>
+        <list_price>396.50</list_price>
+        <item_dimensions>
+            <width>3.2</width>
+            <height>14.25</height>
+            <depth>9.763</depth>
+        </item_dimensions>
+        <item_weight>6.323</item_weight>
+        <box_dimensions>
+            <width>10.5</width>
+            <height>11.25</height>
+            <depth>12.2</depth>
+        </box_dimensions>
+        <box_weight>8.22</box_weight>
+    </product>
+</products>

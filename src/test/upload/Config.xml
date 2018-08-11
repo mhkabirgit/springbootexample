@@ -1,0 +1,1695 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+
+	<logConsole />
+
+	<!-- *************************************************** -->
+	<!-- This config file is really just for development/testing. Every installed 
+		copy has it's own that we use in that environment. -->
+	<!-- *************************************************** -->
+
+	<!-- The base URL for calling our application. -->
+	<baseURL>http://localhost:8080/EDIInterface</baseURL>
+
+	<!-- The type of ID we are using: 01 - DUNS number 12 - Phone Number 13 
+		- UCS Code or Other ZZ - Mutually defined -->
+
+	<IDQualifier>12</IDQualifier>
+
+	<!-- Our EDI ID. -->
+	<ID>2503867FTP</ID>
+
+	<!-- Our business name -->
+	<Name>ANDREW SHERET LTD.</Name>
+
+	<!-- Who do we email if we can't deliver? -->
+	<administrator>david.manning@sheret.com</administrator>
+
+	<!-- *************************************************** -->
+	<!-- Defines the PAM users and groups who are allowed to use this app. -->
+	<!-- *************************************************** -->
+	<authentication>
+		<provider>com.sheret.utils.ASLUPAMAuth</provider>
+		<PAMService>sshd</PAMService>
+
+		<allowUser>sysadmin</allowUser>
+		<allowUser>dave</allowUser>
+
+		<!-- allowGroup>adm</allowGroup -->
+
+	</authentication>
+
+	<!-- *************************************************** -->
+	<!-- These are the directories we will use to store various things. -->
+	<!-- *************************************************** -->
+	<directories>
+		<!-- The location of our variable data. -->
+		<dataDir>/Users/dave/Documents/devTest/EDIInterface/var</dataDir>
+
+		<!-- The directory for the temp files. -->
+		<tmpDir>/Users/dave/Documents/devTest/EDIInterface/tmp</tmpDir>
+
+		<!-- The directory for the log files. -->
+		<logDir>/Users/dave/Documents/devTest/EDIInterface/logs</logDir>
+
+		<!-- The root directory for our archive. -->
+		<archiveDir>/Users/dave/Documents/devTest/EDIInterface/archive
+		</archiveDir>
+
+		<!-- Our inbound spool directory. -->
+		<inboundSpoolDir>/Users/dave/Documents/devTest/EDIInterface/inbound
+		</inboundSpoolDir>
+
+		<!-- Our outbound spool directory. -->
+		<outboundSpoolDir>/Users/dave/Documents/devTest/EDIInterface/outbound
+		</outboundSpoolDir>
+
+		<!-- The directory for our XSLT templates. -->
+		<XSLTTemaplates>/Users/dave/Documents/workspace/EDIInterface/templates
+		</XSLTTemaplates>
+
+		<!-- The directory for our BIRT designs. -->
+		<BIRTDesigns>/Users/dave/Documents/workspace/EDIInterface/designs
+		</BIRTDesigns>
+
+		<!-- The location of our Velocity email templates. -->
+		<VeolicityTemplates>/Users/dave/Documents/workspace/EDIInterface/velocity
+		</VeolicityTemplates>
+	</directories>
+
+	<!-- *************************************************** -->
+	<!-- Mail related configuration. -->
+	<!-- *************************************************** -->
+	<mail>
+		<!-- The mail server to use. -->
+		<mailServer>mail.sheret.com</mailServer>
+
+		<!-- The host to say that email is from. -->
+		<fromHost>EDI.sheret.com</fromHost>
+
+		<!-- The address to say that email is from. -->
+		<fromAddress>EDI@sheret.com</fromAddress>
+
+	</mail>
+
+	<!-- *************************************************** -->
+	<!-- The transactions we support. Right now we just use this for autocomplete. -->
+	<!-- *************************************************** -->
+	<transactions>
+		<transaction>850</transaction>
+		<transaction>810</transaction>
+		<transaction>997</transaction>
+	</transactions>
+
+	<!-- *************************************************** -->
+	<!-- These are the interfaces that we can post transaction to JTWin with. 
+		We can also define human (email) interfaces. Conditions can be placed on 
+		interfaces, but we can still only have one interface per type. Conditions 
+		must return nodes. We will use the interface if we can find > 0 matching 
+		nodes in the document. -->
+	<!-- *************************************************** -->
+
+	<interfaces>
+		<!-- <interface type="810" condition="/transaction[count(descendant::ASLPartnerName[text() 
+			= 'Maax' or text() = 'Masco']) != 0]"> <email>dave@myprivateserver.com</email> 
+			<emailFormat>pdf</emailFormat> <DSArchive>invoice</DSArchive> </interface> 
+			<interface type="810" condition="/transaction[count(descendant::ASLPartnerName[text() 
+			= 'Maax' or text() = 'Masco']) = 0]"> <email>david.manning@sheret.com</email> 
+			<emailFormat>pdf</emailFormat> <DSArchive>invoice</DSArchive> </interface> -->
+		<interface type="810">
+			<email>david.manning@sheret.com</email>
+			<emailFormat>pdf</emailFormat>
+			<!-- emailFrom>810EDI@sheret.com</emailFrom -->
+			<DSArchive>invoice</DSArchive>
+		</interface>
+
+		<interface type="810" condition="EXCEPTION">
+			<email>dave@myprivateserver.com</email>
+			<emailFormat>pdf</emailFormat>
+		</interface>
+
+		<!-- interface type="810"> <URL>http://10.99.225.100:8080/BBXBridge/BBXBRunner?module=EDIInvoiceSubmit 
+			</URL> <URLFormat>xini</URLFormat> </interface -->
+
+		<!-- Only send failed 997s to me. -->
+		<interface type="997" condition="//status[text()='rejected']">
+			<URL />
+			<email>david.manning@sheret.com</email>
+			<emailFormat>pdf</emailFormat>
+		</interface>
+	</interfaces>
+
+	<!-- *************************************************** -->
+	<!-- The config for our Doc Server Client. -->
+	<!-- *************************************************** -->
+
+	<DocServerClient>
+
+		<!-- The base URL for calling our server. -->
+		<baseURL>http://localhost:8080/DocServer</baseURL>
+
+	</DocServerClient>
+
+	<!-- *************************************************** -->
+	<!-- These are our VAN accounts. -->
+	<!-- *************************************************** -->
+	<accounts>
+		<account name="TestFTP">
+
+			<!-- Do we probe this set for inbound messages? -->
+			<inbound />
+
+			<!-- Site to probe. -->
+			<server>10.99.255.86</server>
+
+			<!-- The port to use. -->
+			<port>21</port>
+
+			<!-- The UID to use to post. -->
+			<UID>sysadmin</UID>
+
+			<!-- The password to use. -->
+			<password>balled95</password>
+
+			<!-- The inbound message directory to look in. -->
+			<inboundDirectory>inbound</inboundDirectory>
+
+			<!-- The outbound message directory to put messages in. -->
+			<outboundDirectory>outbound</outboundDirectory>
+		</account>
+
+		<account name="Stirling">
+
+			<!-- Site to probe. -->
+			<server>ftp.gts.globalec.com</server>
+
+			<!-- The port to use. -->
+			<port>21</port>
+
+			<!-- The UID to use to post. -->
+			<UID>SRM3J001</UID>
+
+			<!-- The password to use. -->
+			<password>E6858K.DGX</password>
+
+			<!-- The inbound message directory to look in. -->
+			<inboundDirectory>/receive</inboundDirectory>
+
+			<!-- The outbound message directory to put messages in. -->
+			<outboundDirectory>/send</outboundDirectory>
+
+			<!-- Some VANS require a rename to commit. This is where to rename it 
+				to. -->
+			<renamePrefix>commit/</renamePrefix>
+		</account>
+
+		<account name="AccessFTP">
+			<!-- Site to probe. -->
+			<server>ftp.accplumbing.ca</server>
+
+			<!-- The port to use. -->
+			<port>21</port>
+
+			<!-- The UID to use to post. -->
+			<UID>Frontier</UID>
+
+			<!-- The password to use. -->
+			<password>Ba46vC</password>
+
+			<!-- The inbound message directory to look in. -->
+			<inboundDirectory>./</inboundDirectory>
+
+			<!-- The outbound message directory to put messages in. -->
+			<outboundDirectory>./</outboundDirectory>
+		</account>
+	</accounts>
+
+	<!-- *************************************************** -->
+	<!-- These are the partners we do business with. -->
+	<!-- *************************************************** -->
+	<partners>
+
+		<!-- *************************************************** -->
+		<!-- These are test accounts. -->
+		<!-- *************************************************** -->
+		<partner name="Test">
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- An email address transactions that aren't supported by EDI. -->
+			<email>david.manning@sheret.com</email>
+
+			<!-- Outbound EDI-enabled Transactions. -->
+			<EDITransactionsAccepted>
+				<transaction></transaction>
+			</EDITransactionsAccepted>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>01</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>999999999</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>01</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>999999999</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>014230</ASLPartnerID>
+		</partner>
+
+		<partner name="STIRLING_LOOPBACK">
+			<!-- The account to use for this partner. -->
+			<account>Stirling</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>12</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>2503867FTP</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>12</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>2503867FTP</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>99</ASLPartnerID>
+		</partner>
+
+		<!-- *************************************************** -->
+		<!-- These are ASL vendor accounts. -->
+		<!-- *************************************************** -->
+		<partner name="American Standard - China, Acrylics and Steel">
+			<!-- Contact:Sutter, Mary <sutterm@AmericanStandard.com> -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>12</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>7329803174AS</ID>
+			<GSID>7329803174C0</GSID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>12</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>7329806292</testID>
+			<testGSID></testGSID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>1211</ASLPartnerID>
+		</partner>
+
+		<partner name="American Standard - Walk In Bath">
+			<!-- Contact:Sutter, Mary <sutterm@AmericanStandard.com> -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>12</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>7329803174AS</ID>
+			<GSID>7329803174C0</GSID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>12</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>7329806292</testID>
+			<testGSID></testGSID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>1214</ASLPartnerID>
+
+			<!-- Outbound EDI-enabled Transactions. -->
+			<!-- We don't send POs using EDI to the walk-in bath folks... -->
+			<EDITransactionsAccepted>
+				<transaction>997</transaction>
+			</EDITransactionsAccepted>
+
+			<!-- An email address transactions that aren't supported by EDI. -->
+			<!-- email>dalenec@americanstandard.com</email -->
+			<email>david.manning@sheret.com</email>
+		</partner>
+
+		<partner name="American Standard - Faucets">
+			<!-- Contact:Sutter, Mary <sutterm@AmericanStandard.com> -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>12</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>7329803174AS</ID>
+			<GSID>7329803174C0</GSID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>12</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>7329806292</testID>
+			<testGSID></testGSID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>1216</ASLPartnerID>
+		</partner>
+
+		<partner name="American Standard - Showroom">
+			<!-- Contact:Sutter, Mary <sutterm@AmericanStandard.com> -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>12</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>7329803174AS</ID>
+			<GSID>7329803174C0</GSID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>12</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>7329806292</testID>
+			<testGSID></testGSID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>1215</ASLPartnerID>
+		</partner>
+
+		<partner name="Belanger UPT">
+			<!-- Contact:jaldi@upt.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>01</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>055511331</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>12</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>055511331</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>1581</ASLPartnerID>
+
+			<!-- This is remit-to information. -->
+			<!-- It is used to override what the vendor sends us in the X12. -->
+			<remitTo>
+				<name>Tubular Industries of Canada ltd.</name>
+				<ID />
+				<address>6520 rue Abrams</address>
+				<city>St-Laurent</city>
+				<province>QC</province>
+				<postalCode>H4S 1Y2</postalCode>
+				<country>CA</country>
+			</remitTo>
+		</partner>
+
+		<partner name="Bemis">
+			<!-- Contact:Dean.Reinemann@bemismfg.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>ZZ</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>8771310000</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>ZZ</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>8771310000</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>1486</ASLPartnerID>
+
+			<!-- This is remit-to information. -->
+			<!-- It is used to override what the vendor sends us in the X12. -->
+			<remitTo>
+				<name>Bemis Ltd.</name>
+				<ID />
+				<address>PO Box 3264, Postal Station A</address>
+				<city>Toronto</city>
+				<province>ON</province>
+				<postalCode>M5W 4K2</postalCode>
+				<country>CA</country>
+			</remitTo>
+
+		</partner>
+
+		<partner name="BLANCO">
+			<!-- Contact: Thomas Michael <mthomas@blancocanada.com> or ajwalfoort@spscommerce.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>ZZ</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>14601460YK</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>ZZ</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>14601460YK</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>1460</ASLPartnerID>
+		</partner>
+
+		<partner name="Boshart Industries">
+			<!-- Contact: michael.maclellan@boshart.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>12</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>8005613164</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>12</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>8005613164</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>7743</ASLPartnerID>
+		</partner>
+
+		<partner name="BOW Plastics">
+			<!-- Contact: asselin@bow-group.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>ZZ</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>CEVA</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>ZZ</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>CEVA</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>1602</ASLPartnerID>
+		</partner>
+
+		<partner name="Canada Metal (Pacific) Ltd.">
+			<!-- Contact: Sherlyn Cordero <scordero@canmet.com>, Ashley Rasmussen 
+				<amrasmussen@spscommerce.com> -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>ZZ</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>60454036YK</ID>
+
+			<!-- The EDI ID qualifier to use when we are testing. -->
+			<testIDQualifier>ZZ</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>60454036YK</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>1851</ASLPartnerID>
+		</partner>
+
+		<partner name="CANPLAS">
+			<!-- Contact: mhoeben@Canplas.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>12</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>7057263361</ID>
+
+			<!-- The EDI ID qualifier to use when we are testing. -->
+			<testIDQualifier>12</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>7057263361</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>2291</ASLPartnerID>
+		</partner>
+
+		<partner name="Dura Plastics">
+			<!-- Contact: ann@randrinc.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>12</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>9098453161</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>12</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>9098453161</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>3243</ASLPartnerID>
+		</partner>
+
+		<partner name="Fairview Fittings">
+			<!-- Contact: saml@fairviewfittings.com, support-edi@alligacom.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>ZZ</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>FAIRVIEW</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>ZZ</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>FAIRVIEW</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>3241</ASLPartnerID>
+		</partner>
+
+		<partner name="Franke">
+			<!-- Contact: bruce.prevett@franke.com, donnas@commport.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>12</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>7055265427</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>12</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>7055265427</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>4401</ASLPartnerID>
+		</partner>
+
+		<partner name="Great Lakes Copper">
+			<!-- Contact: Kim Oatway koatway@primus.ca -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>08</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>BN105730964</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>08</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>BN105730964</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>6821</ASLPartnerID>
+		</partner>
+
+		<partner name="Grohe">
+			<!-- Contact: Sarah.Karsan@grohe.com and Ankit.Gupta@grohe.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>01</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>097190763</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>01</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>097190763T</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>4044</ASLPartnerID>
+		</partner>
+
+		<partner name="Grundfos">
+			<!-- Contact: cvwalker@grundfos.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>12</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>9132273400</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>12</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>9132273400T</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>1971</ASLPartnerID>
+
+			<!-- Outbound EDI-enabled Transactions. -->
+			<EDITransactionsAccepted>
+				<transaction
+					condition="/transaction[count(descendant::quote[string-length(text()) != 0]) = 0]">850</transaction>
+				<transaction>997</transaction>
+			</EDITransactionsAccepted>
+
+			<!-- An email address transactions that aren't supported by EDI. -->
+			<email>david.manning@sheret.com</email>
+		</partner>
+
+		<partner name="Holdrite">
+			<!-- Contact: Joel Cummings <jcummings@holdrite.com> -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>01</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>7607446944</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>01</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>7607446944</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>3534</ASLPartnerID>
+		</partner>
+
+		<partner name="Honeywell">
+			<!-- Contact: Kleckner, Beverly (MN10)" <beverly.kleckner@honeywell.com> -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>01</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>001325240</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>01</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>001325240T</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>3972</ASLPartnerID>
+		</partner>
+
+		<partner name="Hytec">
+			<!-- Contact: Padmini Santhosh-Kumar <edi4kba@kohler.com> -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<!-- HACK - THIS ISN'T THE REAL PRODUCTION ID. -->
+			<IDQualifier>ZZ</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>KOHLERPNAP</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>ZZ</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>KOHLERPNAT</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>3991</ASLPartnerID>
+
+		</partner>
+
+		<partner name="IPEX">
+			<!-- Contact: Johanne.Lussier@ipexna.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<!-- HACK - THIS ISN'T THE REAL PRODUCTION ID. -->
+			<IDQualifier>12</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>5148617221</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>12</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>5148617221</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>2321</ASLPartnerID>
+		</partner>
+
+		<partner name="IPEX - Fittings">
+			<!-- Contact: Johanne.Lussier@ipexna.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<!-- HACK - THIS ISN'T THE REAL PRODUCTION ID. -->
+			<IDQualifier>12</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>5148617221</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>12</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>5148617221</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>2322</ASLPartnerID>
+		</partner>
+
+		<partner name="Lenox">
+			<!-- Contact: Sander, Larry <Larry.Sander@newellco.com> -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<!-- HACK - THIS ISN'T THE REAL PRODUCTION ID. -->
+			<IDQualifier>08</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>6111970007</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>08</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>6111970007T</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>1050</ASLPartnerID>
+
+		</partner>
+
+		<partner name="Maax">
+
+			<!-- Contact: Yves.St-Hilaire@maax.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>12</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>2505468701</ID>
+
+			<!-- The EDI ID qualifier to use when testing. -->
+			<testIDQualifier>ZZ</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>248424798T</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>6451</ASLPartnerID>
+		</partner>
+
+		<partner name="Malco">
+
+			<!-- Contact: Joni Walberg edi@malcotools.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>01</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>066523044</ID>
+
+			<!-- The EDI ID qualifier to use when testing. -->
+			<testIDQualifier>01</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>066523044</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>4531</ASLPartnerID>
+		</partner>
+
+		<partner name="MASCO">
+
+			<!-- Contact: mboughner@mascocanada.com and kmierkalns@mascocanada.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>12</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>5196593626</ID>
+
+			<!-- The EDI ID qualifier to use when testing. -->
+			<testIDQualifier>12</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>5196593626</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>3053</ASLPartnerID>
+
+			<!-- Outbound EDI-enabled Transactions. -->
+			<!-- We EDI all our 850s unless there are special instructions. -->
+			<EDITransactionsAccepted>
+				<transaction
+					condition="/transaction[count(descendant::message[string-length(text()) != 0]) = 0]">850</transaction>
+				<transaction>997</transaction>
+			</EDITransactionsAccepted>
+
+			<!-- An email address transactions that aren't supported by EDI. -->
+			<!-- email>customerservice@mascocanada.com</email -->
+			<email>david.manning@sheret.com</email>
+
+			<!-- These are other vendor ID's that we should be willing to match when 
+				looking for the PO in JTWin. -->
+			<!-- We just pass this info on so JTWin can use it. -->
+			<aliases>
+				<!-- This is Westpoint Sales - a local distribution point. -->
+				<alias>3051</alias>
+			</aliases>
+		</partner>
+
+		<partner name="MASCO - Brass Craft">
+			<!-- This is a Masco sub-brand. -->
+			<!-- Contact: mboughner@mascocanada.com and kmierkalns@mascocanada.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>12</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>5196593626</ID>
+
+			<!-- The EDI ID qualifier to use when testing. -->
+			<testIDQualifier>12</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>5196593626</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>1691</ASLPartnerID>
+
+			<!-- Outbound EDI-enabled Transactions. -->
+			<!-- We EDI all our 850s unless there are special instructions. -->
+			<EDITransactionsAccepted>
+				<transaction
+					condition="/transaction[count(descendant::message[string-length(text()) != 0]) = 0]">850</transaction>
+				<transaction>997</transaction>
+			</EDITransactionsAccepted>
+
+			<!-- An email address transactions that aren't supported by EDI. -->
+			<!-- email>customerservice@mascocanada.com</email -->
+			<email>david.manning@sheret.com</email>
+
+			<!-- These are other vendor ID's that we should be willing to match when 
+				looking for the PO in JTWin. -->
+			<!-- We just pass this info on so JTWin can use it. -->
+			<aliases>
+				<!-- This is Westpoint Sales - a local distribution point. -->
+				<alias>3051</alias>
+			</aliases>
+		</partner>
+
+		<partner name="MASCO - Master Plumber">
+			<!-- This is a Masco sub-brand. -->
+			<!-- Contact: mboughner@mascocanada.com and kmierkalns@mascocanada.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>12</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>5196593626</ID>
+
+			<!-- The EDI ID qualifier to use when testing. -->
+			<testIDQualifier>12</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>5196593626</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>5902</ASLPartnerID>
+
+			<!-- Outbound EDI-enabled Transactions. -->
+			<!-- We EDI all our 850s unless there are special instructions. -->
+			<EDITransactionsAccepted>
+				<transaction
+					condition="/transaction[count(descendant::message[string-length(text()) != 0]) = 0]">850</transaction>
+				<transaction>997</transaction>
+			</EDITransactionsAccepted>
+
+			<!-- An email address transactions that aren't supported by EDI. -->
+			<!-- email>customerservice@mascocanada.com</email -->
+			<email>david.manning@sheret.com</email>
+
+			<!-- These are other vendor ID's that we should be willing to match when 
+				looking for the PO in JTWin. -->
+			<!-- We just pass this info on so JTWin can use it. -->
+			<aliases>
+				<!-- This is Westpoint Sales - a local distribution point. -->
+				<alias>3051</alias>
+			</aliases>
+		</partner>
+
+		<partner name="MA Stewart">
+			<!-- Contact: stang@mastewart.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>12</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>6045948431</ID>
+
+			<!-- The EDI ID qualifier to use when testing. -->
+			<testIDQualifier>12</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>6045948431</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>5991</ASLPartnerID>
+
+			<!-- An email address transactions that aren't supported by EDI. -->
+			<!-- email>markd@mastewart.com,thomas@mastewart.com</email -->
+			<email>david.manning@sheret.com</email>
+
+			<!-- Outbound EDI-enabled Transactions. -->
+			<!-- We EDI all our 850s unless they are direct ship, custom quote or have special processing instructions. -->
+			<!-- We spot direct ship because there is no ID in the shipTo. -->
+			<EDITransactionsAccepted>
+				<transaction 
+					condition="(/transaction[(count(descendant::shipTo[string-length(ID/text()) != 0]) = count(descendant::shipTo)) and 
+					(count(descendant::quote[string-length(text()) != 0]) = 0) and 
+					(count(descendant::message[string-length(text()) != 0]) = 0)])">850</transaction>
+				<transaction>997</transaction>
+			</EDITransactionsAccepted>
+		</partner>
+
+		<partner name="Milwaukee">
+			<!-- Contact: John.Streff@milwaukeetool.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>ZZ</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>METCOCANADA</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>ZZ</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>METCOCANADA</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>4702</ASLPartnerID>
+
+			<!-- Milwaukee Doesn't support EDI POs without prices on them. We email 
+				instead. -->
+			<!-- Outbound EDI-enabled Transactions. -->
+			<EDITransactionsAccepted>
+				<transaction>997</transaction>
+			</EDITransactionsAccepted>
+
+			<!-- An email address transactions that aren't supported by EDI. -->
+			<!-- email>jay.seggie@ttigroupna.com</email -->
+			<email>david.manning@sheret.com</email>
+		</partner>
+
+		<partner name="MOEN">
+			<!-- Contact: Ellen.Livingston@moen.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>01</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>004953758</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>01</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>004953758</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>5922</ASLPartnerID>
+		</partner>
+
+		<partner name="Oatey">
+			<!-- Contact: GStaton@oatey.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>12</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>2162677100</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>12</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>2162677100</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>5010</ASLPartnerID>
+		</partner>
+
+		<partner name="Oakville Stamping and Bending">
+			<!-- Contact: Valerie Westernacher [mailto:ValerieW@pho-sys.com] -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>ZZ</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>9058270320</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>ZZ</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>9058270320</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>7581</ASLPartnerID>
+		</partner>
+
+		<partner name="Toro">
+			<!-- Contact: Kevin.Schmitt@toro.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>01</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>006477400</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>01</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>006477400S</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>4630</ASLPartnerID>
+		</partner>
+
+		<partner name="Watts - Regulator (Water)">
+			<!-- Contact: EdiProd@wattswater.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>08</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>4113060001</ID>
+			<GSID>4113060001</GSID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>08</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>4113060001T</testID>
+			<testGSID>4113060001T</testGSID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>6911</ASLPartnerID>
+		</partner>
+
+		<partner name="Watts - Power (Powers)">
+			<!-- Contact: EdiProd@wattswater.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>08</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>4113060001</ID>
+			<GSID>4113060008</GSID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>08</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>4113060001T</testID>
+			<testGSID>4113060008T</testGSID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>2352</ASLPartnerID>
+		</partner>
+
+		<partner name="Watts - Drains (Ancon)">
+			<!-- Contact: EdiProd@wattswater.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>08</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>4113060001</ID>
+			<GSID>4113060007</GSID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>08</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>4113060001T</testID>
+			<testGSID>4113060007T</testGSID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>1251</ASLPartnerID>
+		</partner>
+
+		<!-- *************************************************** -->
+		<!-- These are ASL customer accounts. -->
+		<!-- *************************************************** -->
+		<partner name="Rona">
+			<!-- Contact: Colette.Robitaille@rona.ca -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>01</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>204197800</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>01</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>204197800</testID>
+
+			<ASLPartnerID>077082</ASLPartnerID>
+
+			<!-- This is special RONA info that is included in the RONA map. -->
+			<RONASupplierNumber>5232</RONASupplierNumber>
+		</partner>
+
+		<partner name="Rona - 61030">
+			<!-- Contact: Colette.Robitaille@rona.ca -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>01</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>204197800</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>01</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>204197800</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>037482</ASLPartnerID>
+
+			<!-- This is special RONA info that is included in the RONA map. -->
+			<RONASupplierNumber>5232</RONASupplierNumber>
+			<RONAStoreNumber>61030</RONAStoreNumber>
+		</partner>
+
+		<partner name="Rona - 61700">
+			<!-- Contact: Colette.Robitaille@rona.ca -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>01</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>204197800</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>01</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>204197800</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>057764</ASLPartnerID>
+
+			<!-- This is special RONA info that is included in the RONA map. -->
+			<RONASupplierNumber>5232</RONASupplierNumber>
+			<RONAStoreNumber>61700</RONAStoreNumber>
+		</partner>
+
+		<partner name="Rona - 61300">
+			<!-- Contact: Colette.Robitaille@rona.ca -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>01</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>204197800</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>01</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>204197800</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>067331</ASLPartnerID>
+
+			<!-- This is special RONA info that is included in the RONA map. -->
+			<RONASupplierNumber>5232</RONASupplierNumber>
+			<RONAStoreNumber>61300</RONAStoreNumber>
+		</partner>
+
+		<partner name="Rona - 61720">
+			<!-- Contact: Colette.Robitaille@rona.ca -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>01</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>204197800</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>01</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>204197800</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>077081</ASLPartnerID>
+
+			<!-- This is special RONA info that is included in the RONA map. -->
+			<RONASupplierNumber>5232</RONASupplierNumber>
+			<RONAStoreNumber>61720</RONAStoreNumber>
+		</partner>
+
+		<partner name="Rona - 61120">
+			<!-- Contact: Colette.Robitaille@rona.ca -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>01</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>204197800</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>01</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>204197800</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>107629</ASLPartnerID>
+
+			<!-- This is special RONA info that is included in the RONA map. -->
+			<RONASupplierNumber>5232</RONASupplierNumber>
+			<RONAStoreNumber>61120</RONAStoreNumber>
+		</partner>
+
+		<partner name="Rona - 61340">
+			<!-- Contact: Colette.Robitaille@rona.ca -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>01</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>204197800</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>01</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>204197800</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>137932</ASLPartnerID>
+
+			<!-- This is special RONA info that is included in the RONA map. -->
+			<RONASupplierNumber>5232</RONASupplierNumber>
+			<RONAStoreNumber>61340</RONAStoreNumber>
+		</partner>
+
+		<partner name="Rona - 61310">
+			<!-- Contact: Colette.Robitaille@rona.ca -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>01</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>204197800</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>01</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>204197800</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>137933</ASLPartnerID>
+
+			<!-- This is special RONA info that is included in the RONA map. -->
+			<RONASupplierNumber>5232</RONASupplierNumber>
+			<RONAStoreNumber>61310</RONAStoreNumber>
+		</partner>
+
+		<partner name="Rona - 04390">
+			<!-- Contact: Colette.Robitaille@rona.ca -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>01</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>204197800</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>01</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>204197800</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>167660</ASLPartnerID>
+
+			<!-- This is special RONA info that is included in the RONA map. -->
+			<RONASupplierNumber>5232</RONASupplierNumber>
+			<RONAStoreNumber>04390</RONAStoreNumber>
+		</partner>
+
+		<partner name="Rona - 01890">
+			<!-- Contact: Colette.Robitaille@rona.ca -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>01</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>204197800</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>01</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>204197800</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>167661</ASLPartnerID>
+
+			<!-- This is special RONA info that is included in the RONA map. -->
+			<RONASupplierNumber>5232</RONASupplierNumber>
+			<RONAStoreNumber>01890</RONAStoreNumber>
+		</partner>
+
+		<partner name="Rona - 11690">
+			<!-- Contact: Colette.Robitaille@rona.ca -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>01</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>204197800</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>01</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>204197800</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>167662</ASLPartnerID>
+
+			<!-- This is special RONA info that is included in the RONA map. -->
+			<RONASupplierNumber>5232</RONASupplierNumber>
+			<RONAStoreNumber>11690</RONAStoreNumber>
+		</partner>
+
+		<partner name="Rona - 61480">
+			<!-- Contact: Colette.Robitaille@rona.ca -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>01</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>204197800</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>01</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>204197800</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>187575</ASLPartnerID>
+
+			<!-- This is special RONA info that is included in the RONA map. -->
+			<RONASupplierNumber>5232</RONASupplierNumber>
+			<RONAStoreNumber>61480</RONAStoreNumber>
+		</partner>
+
+		<partner name="Rona - 61040">
+			<!-- Contact: Colette.Robitaille@rona.ca -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>01</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>204197800</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>01</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>204197800</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>217335</ASLPartnerID>
+
+			<!-- This is special RONA info that is included in the RONA map. -->
+			<RONASupplierNumber>5232</RONASupplierNumber>
+			<RONAStoreNumber>61040</RONAStoreNumber>
+		</partner>
+
+		<partner name="Rona - 61020">
+			<!-- Contact: Colette.Robitaille@rona.ca -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>01</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>204197800</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>01</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>204197800</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>217340</ASLPartnerID>
+
+			<!-- This is special RONA info that is included in the RONA map. -->
+			<RONASupplierNumber>5232</RONASupplierNumber>
+			<RONAStoreNumber>61020</RONAStoreNumber>
+		</partner>
+
+		<partner name="Rona - 61710">
+			<!-- Contact: Colette.Robitaille@rona.ca -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>01</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>204197800</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>01</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>204197800</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>227500</ASLPartnerID>
+
+			<!-- This is special RONA info that is included in the RONA map. -->
+			<RONASupplierNumber>5232</RONASupplierNumber>
+			<RONAStoreNumber>61710</RONAStoreNumber>
+		</partner>
+
+		<partner name="Rona - 61330">
+			<!-- Contact: Colette.Robitaille@rona.ca -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>01</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>204197800</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>01</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>204197800</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>237500</ASLPartnerID>
+
+			<!-- This is special RONA info that is included in the RONA map. -->
+			<RONASupplierNumber>5232</RONASupplierNumber>
+			<RONAStoreNumber>61330</RONAStoreNumber>
+		</partner>
+
+		<partner name="Rona - 08140">
+			<!-- Contact: Colette.Robitaille@rona.ca -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>01</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>204197800</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>01</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>204197800</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<ASLPartnerID>027405</ASLPartnerID>
+
+			<!-- This is special RONA info that is included in the RONA map. -->
+			<RONASupplierNumber>5232</RONASupplierNumber>
+			<RONAStoreNumber>08140</RONAStoreNumber>
+		</partner>
+
+		<!-- *************************************************** -->
+		<!-- These are Frontier customer accounts. -->
+		<!-- *************************************************** -->
+		<partner name="Access Plumbing">
+			<!-- Contact: djstariha@tradesware.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>12</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>7804595999</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>12</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>7804595999</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<!-- HACK - Need to fill this out. -->
+			<ASLPartnerID>010599</ASLPartnerID>
+
+		</partner>
+		<partner name="Canyon Plumbing">
+			<!-- Contact: djstariha@tradesware.com -->
+			<!-- The account to use for this partner. -->
+			<account>TestFTP</account>
+
+			<!-- The EDI ID qualifier -->
+			<IDQualifier>12</IDQualifier>
+
+			<!-- The EDI ID. -->
+			<ID>4032581505</ID>
+
+			<!-- The EDI ID qualifier to sue when we are testing. -->
+			<testIDQualifier>12</testIDQualifier>
+
+			<!-- The ID to use when we are testing. -->
+			<testID>4032581505</testID>
+
+			<!-- The ASl ID for this partner. -->
+			<!-- HACK - Need to fill this out. -->
+			<ASLPartnerID>022460</ASLPartnerID>
+		</partner>
+
+	</partners>
+
+</config>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<title>JSON Test</title>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	function showJsonData(){
+		
+		var text='{"employees":[{"firstname":"John", "lastname":"Smith"},{"firstname":"Dave", "lastname":"Manning"},{"firstname":"Dave", "lastname":"Shepherd"}]}';
+	
+		var obj=JSON.parse(text);
+		
+		document.getElementById("jsonData").innerHTML = obj.employees[0].firstname+" "+obj.employees[0].lastname+"\, "+obj.employees[1].firstname+" "+obj.employees[1].lastname+"\, "+obj.employees[2].firstname+" "+obj.employees[2].lastname;
+	}
+	/*]]>*/
+</script>
+</head>
+<body>
+
+<p id="jsonData">JSON Data will be shown here</p>
+<button type="button" th:onClick="'javascript:showJsonData();'" >Show JSON</button>
+</body>
+</html>

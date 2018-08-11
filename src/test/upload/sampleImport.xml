@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<products>
+	<product>
+		<partId>978-DST</partId>
+		<name><![CDATA[Delta Leland One-Handle Kitchen Faucet with Pulldown Spray]]></name>
+		<description><![CDATA[Leland 2-hole, one-handle kitchen faucet with pulldown spray. Leland(R), traditional styling and modern functionality come together in dramatic fashion for a timeless look. The Delta(R)-exclusive MagnaTite(TM) docking system keeps the spray wand securely in place for picture-perfect grace.]]></description>
+		<shortDescription><![CDATA[Leland 2-hole, one-handle kitchen faucet with pulldown spray.]]></shortDescription>
+		<listPrice currency="usd">396.50</listPrice>
+		<itemWeight unit="lb.">6.323</itemWeight>
+		<boxWeight unit="lb.">8.22</boxWeight>
+		<vendor code="1234">Delta</vendor>
+		<series>Leland</series>
+		<upc>123456789012</upc>
+		<warranty>3 year</warranty>
+		<itemDimensions unit="in.">
+			<depth>9.763</depth>
+			<width>3.2</width>
+			<height>14.25</height>
+		</itemDimensions>
+		<boxDimensions unit="in.">
+			<depth>12.2</depth>
+			<width>10.5</width>
+			<height>11.25</height>
+		</boxDimensions>
+		<type>Faucet</type>
+		<category>Fixtures</category>
+		<images>
+			<image>
+				<url>http://dfc.scene7.com/is/image/DFC/978-DST-B1?id=WAnqP0&amp;scl=4&amp;req=tile&amp;rect=256,512,119,28&amp;fmt=jpg</url>
+				<path>/test/image/path</path>
+			</image>
+		</images>
+		<features>
+			<feature><![CDATA[Handle: SINGLE HANDLE LEVER]]></feature>
+			<feature><![CDATA[Country of Origin: US]]></feature>
+			<feature><![CDATA[A charming teapot-inspired series of faucets for the entire home.]]></feature>
+			<feature><![CDATA[Timeless design is a perfect marriage of both form and function.]]></feature>
+			<feature><![CDATA[High-arc spout swivels 360 degrees for complete sink access]]></feature>
+			<feature><![CDATA[The pull-down spray wand features a 59'' hose providing a 20'' reach]]></feature>
+			<feature><![CDATA[13 7/8'' high-arc spout provides extra clearance for deep pots and pans]]></feature>
+			<feature><![CDATA[Spout length: 9-3/16]]></feature>
+			<feature><![CDATA[Spout total height: 14-1/4]]></feature>
+			<feature><![CDATA[Spout Height Deck to Aerator: 7-1/8]]></feature>
+			<feature><![CDATA[Holes for installation: 2-hole 4" installation]]></feature>
+			<feature><![CDATA[Lead Free compliant: Y]]></feature>
+			<feature><![CDATA[Valve type: DIAMOND(TM) Seal Valve]]></feature>
+		</features>
+		<links>
+			<link>
+				<url>http://www.deltafaucet.com/goto/product/978-DST</url>
+				<path>/test/link/path</path>
+				<linkType>productSite</linkType>
+			</link>
+		</links>
+		<tags>
+			<tag>faucet</tag>
+			<tag>kitchen</tag>
+			<tag>one-handle</tag>
+		</tags>
+		<notes>
+			<note><![CDATA[Additional Info: comes with extra o-rings]]></note>
+		</notes>
+		<updated>2014-11-15 12:00:0</updated>
+		<status>available</status>
+	</product>
+</products>

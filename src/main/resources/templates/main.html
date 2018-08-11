@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <title>Spring Boot Demo Main</title>
+    </head>
+    <body>
+        <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
+        <h1>This is Spring Boot Demo Main Page</h1>
+        <p>Upload <a href="./upload/singlefile">single</a> or <a href="./upload/multiplefile">multiple</a> files.</p>
+        <p>Test <a href="./jsontest">JSON </a> data in java script</p>
+        <p>Test <a href="./testException">Exception </a></p>
+        <p>Test <a href="./testError">Error </a></p>
+        <h2>Click on "Logout" to exit.</h2>
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" value="Logout"/>
+        </form>
+    </body>
+</html>

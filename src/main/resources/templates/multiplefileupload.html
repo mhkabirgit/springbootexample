@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <title>Multiple File Upload Form</title>
+        
+    </head>
+    <body>
+    
+        <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]! Select files to upload</h1>
+        <table>
+        		<tr>
+        			<td><strong>Selected Files: </strong></td>
+        			<td><ul id="uList"><li>No Files Selected</li></ul></td>
+        		</tr>
+        		<tr><td></td></tr>
+        </table>
+        
+      
+        <form th:action="@{/upload/multiplefile}" method="post" enctype="multipart/form-data">
+        	<input id="filesToUpload" type="file" name="filesToUpload" multiple="true"  th:onChange="'javascript:showFileList();'" />
+        	
+        	<!-- alternative of multiple attribute on file input
+        	<input type="file" name="filesToUpload"/>
+        	<input type="file" name="filesToUpload"/> 
+        	-->
+        	
+            <input type="submit" value="Submit"/>
+        </form>
+      
+        
+     	<script th:inline="javascript">
+      	 /*<![CDATA[*/
+          function showFileList(){
+      		 
+        	  var selectedFiles=document.getElementById("filesToUpload");
+        	  var ul=document.getElementById("uList");
+        	  
+        	  while(ul.hasChildNodes()) {
+        		  ul.removeChild(ul.firstChild);
+        	  }
+        	  
+        	  for (var i = 0; i < selectedFiles.files.length; i++) {
+        		  var li=document.createElement("li");
+        		  li.innerHTML=selectedFiles.files[i].name;
+        		  ul.appendChild(li);
+        	  }
+        	  
+        	  if(!ul.hasChildNodes()) {
+        		  var li=document.createElement("li");
+        		  li.innerHTML="No Files Selected";
+        		  ul.appendChild(li);
+        	  }
+          }
+      	 /*]]>*/
+        </script>
+    </body>
+</html>
